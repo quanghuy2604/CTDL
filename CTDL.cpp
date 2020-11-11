@@ -5,6 +5,8 @@
 #include <fstream>
 #include<iomanip>
 #include <ctime>
+#include <chrono> 
+
 
 using namespace std;
 
@@ -56,8 +58,7 @@ public:
         getline(cin, s.giaBan);
         cout << "Nha xuat ban : " << endl;
         getline(cin, s.NXB);
-        cout << "Tinh trang : " << endl;
-        getline(cin, s.tinhTrang);
+        s.tinhTrang = "0";
         cout << "Nam phat hanh : " << endl;
         getline(cin, s.namPH);
         cout << "So trang : " << endl;
@@ -71,6 +72,7 @@ public:
     {
         ofstream file_s("../Sach.txt");
         for (int i = 0; i < n; i++) {
+            if (arr[i].maSach!="null")
             file_s << arr[i].maSach << "," << arr[i].tenSach << "," << arr[i].tacGia << "," << arr[i].giaBan << "," << arr[i].NXB << "," << arr[i].tinhTrang << "," << arr[i].namPH << "," << arr[i].soTrang << "," << arr[i].ngayNK << endl;
         }
         file_s.close();
@@ -177,6 +179,31 @@ public:
         f.close();
         
     }
+    int TimSach(sach arr[1000], int sl, string id) {
+        for (int index = 0; index < sl; index++) {
+            if (arr[index].maSach == id) {
+                if (arr[index].tinhTrang == "0")
+                    //sach  muon đuoc
+                    return 2;
+                else
+                    //sach ko muon dc
+                    return 1;
+            }
+        }
+        //khong tim thay ma sach
+        return 0;
+    }
+    void ttsach(sach arr[1000], int sl, string id,string cd) {
+        for (int index = 0; index < sl; index++) {
+            if (arr[index].maSach == id) {
+                    //doi tinh trang sach
+                arr[index].tinhTrang = cd;
+
+            }
+        }
+    }
+
+    
 };
 class banDoc {
 private:
@@ -223,17 +250,21 @@ public:
     void xuat_bd()
     {
         int w = 25;
+        if (this->ma != "null")
+        {
             cout << setw(w) << this->ma;
             cout << setw(w) << this->hoTen;
             cout << setw(w) << this->sdt;
             cout << setw(w) << this->diachi;
             cout << setw(w) << this->ngayTG;
             cout << endl;
+        }
     }
     void update_bd(banDoc arr[1000], int n)
     {
         ofstream file_s("../BD.txt");
         for (int i = 0; i < n; i++) {
+            if (arr[i].ma != "null")
             file_s << arr[i].ma << "," << arr[i].hoTen << "," << arr[i].sdt << "," << arr[i].diachi << "," << arr[i].ngayTG << endl;
         }
         file_s.close();
@@ -284,21 +315,14 @@ public:
         f.close();
 
     }
-    void xoa(banDoc arr[1000], int& n)
-    {
-        string id_xoa;
-        cout << "Nhap id sach can xoa" << endl;
-        cin >> id_xoa;
-        bool flag = false;
+    
+    bool timBD(banDoc arr[1000], int n,string id) {
         for (int index = 0; index < n; index++) {
-            if (arr[index].ma == id_xoa) {
-                arr[index].ma = "null";
-                flag = true;
+            if (arr[index].ma == id) {
+                return true;
             }
         }
-        if (!flag) {
-            cout << "Ma sach khong ton tai";
-        }
+        return false;
     }
 
 };
@@ -314,7 +338,6 @@ public:
         this->maBD = "";
         this->maSach = "";
         this->ngayMuon = "";
-        this->ngayTra;
         this->ngayTra = "";
         this->tinhTrang = "";
 
@@ -400,7 +423,49 @@ public:
 
     }
 
-    
+    void muonsach(phieuMuon arr[1000], int& sl, string mabd, string masach)
+    {
+        time_t baygio = time(0);
+        tm* ltm = localtime(&baygio);
+        string nam = to_string(1900 + ltm->tm_year);
+        string thang = to_string(1 + ltm->tm_mon);
+        string ngay = to_string(ltm->tm_mday);
+        string ngaytra = to_string(ltm->tm_mday +7);
+
+        arr[sl].soPhieu = to_string(sl+1);
+        arr[sl].maBD = mabd;
+        arr[sl].maSach = masach;
+        arr[sl].ngayMuon = ngay+"/"+thang+"/"+nam;
+        arr[sl].ngayTra = ngaytra + "/" + thang + "/" + nam;
+        arr[sl].tinhTrang = "1";
+        sl++;
+         
+    }
+    string trasach(phieuMuon arr[1000], int sl, string sp) {
+        for (int index = 0; index < sl; index++) {
+            if (arr[index].soPhieu == sp) {
+                if (arr[index].tinhTrang == "1") {
+                    arr[index].tinhTrang = "0";
+                    //tra sach thanh cong
+                    return arr[index].maSach;
+               }
+                else {
+                    //phieu muon da dc tra
+                    return "1";
+                }
+            }
+        }
+        //ko tim thay phieu muon
+        return "0";
+    }
+    void update_pm(phieuMuon arr[1000], int n)
+    {
+        ofstream file_s("../PhieuMuon.txt");
+        for (int i = 0; i < n; i++) {
+                file_s << arr[i].soPhieu << "," << arr[i].maSach << "," << arr[i].maBD << "," << arr[i].ngayMuon << "," << arr[i].ngayTra << "," << arr[i].tinhTrang << endl;
+        }
+        file_s.close();
+    }
     
 };
 string inputPassword(size_t length_max)
@@ -535,7 +600,7 @@ menu:
     else if (tab==2)
     {
         cout << "1. Xem danh sach phieu muon" << endl;
-        cout << "2.Them phieu muon moi" << endl;
+        cout << "2.Muon sach" << endl;
         cout << "3.Tra sach" << endl;
         cout << "Chon tac vu: " << endl;
         cin >> tab_sach;
@@ -547,29 +612,73 @@ menu:
                 list_pm[i].xuat();
             }
 
-
-
+            cout << endl;
             goto menu;
 
         }
         else if (tab_sach == 2) {
-            //them sach
-            
+            //Muon sach
+            string id_bd, id_sach;
+            int err;
+            cout <<endl<< "Nhap ma ban doc : ";
+            cin >> id_bd;
+            cout << endl << "Nhap ma sach muon :";
+            cin >> id_sach;
+            err=s.TimSach(list_s, n_s, id_sach);
+            if (err == 0) {
+                cout << endl << "Khong tim thay sach muon muon.";
+            }
+            else if (err == 1) {
+                cout << endl << "Sach da duoc muon.";
+            }
+            else {
+                bool flag;
+                flag=bd.timBD(list_bd, n_bd, id_bd);
+                if (flag) {
+                    l.muonsach(list_pm, n_pm, id_bd, id_sach);
+                    l.update_pm(list_pm, n_pm);
+                    s.ttsach(list_s,n_s, id_sach,"1");
+                    s.update_sach(list_s, n_s);
+                    cout << endl << "Muon sach thanh cong.";
+                }
+                else {
+                    cout << endl << "Khong tim thay ma ban doc.";
+                }
+            }
+            cout << endl;
 
             goto menu;
         }
         else if (tab_sach == 3) {
-            //Xoa sach
-            
+            //Tra sach
+            string sp;
+            string err;
+            cout << "Nhap so phieu muon tra: ";
+            cin >> sp;
+            //tra ve id sach
+            err=l.trasach(list_pm, n_pm, sp);
+            if (err == "0") {
+                cout << endl << "Khong tim thay phieu muon.";
+            }
+            else if (err == "1") {
+                cout <<endl << "Phieu muon da dc tra.";
+            }
+            else{
+                cout << endl << "Tra sach thanh cong";
+                s.ttsach(list_s, n_s,err, "0");
+                s.update_sach(list_s, n_s);
+
+            }
+            l.update_pm(list_pm, n_pm);
+            cout << endl;
             goto menu;
         }
-
+        cout << endl;
         goto menu;
     }
     else if (tab == 3) {
         cout << "1. Xem danh sach ban doc" << endl;
         cout << "2. Them ban doc" << endl;
-        cout << "3.Xoa ban doc" << endl;
         cout << "Chon tac vu: " << endl;
         cin >> tab_bd;
         if (tab_bd == 1) {
@@ -591,13 +700,7 @@ menu:
 
             goto menu;
         }
-        else if (tab_bd == 3) {
-            //Xoa ban doc
-            bd.xoa(list_bd, n_bd);
-            bd.update_bd(list_bd, n_bd);
-
-            goto menu;
-        }
+       
         goto menu;
 
     }
@@ -611,17 +714,9 @@ int main()
     sach s;
     if (dangNhap()){
         menu();
-        time_t rawtime;
-        struct tm* timeinfo;
-        char buffer[80];
-
-        time(&rawtime);
-        timeinfo = localtime(&rawtime);
-
-        strftime(buffer, 80, "%d-%m-%Y %I:%M:%S", timeinfo);
-        std::string str(buffer);
-
-        std::cout << str;
+        
+        
+        
     }
     
 
