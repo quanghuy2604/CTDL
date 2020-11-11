@@ -4,68 +4,9 @@
 #include <windows.h>
 #include <fstream>
 #include<iomanip>
-
+#include <ctime>
 
 using namespace std;
-//DSLK
-/*template <typename T>
-struct node {
-    T data;
-    node<T>* next;
-};
-
-template <class T>
-node<T>* GetNode(T x);
-
-template <class T>
-class List
-{
-    node<T>* head;
-    node<T>* tail;
-public:
-    List();
-    node getNode(T x)
-    {
-        node p;
-        if (p != NULL)
-        {
-            p->data = x;
-            p->next = NULL;
-        }
-        return p;
-    }
-    void create_list() {
-       node head =NULL, tail = NULL;
-    };
-    void AddTail(node& head, node& tail , T val) {
-        node r = getNode(val);
-        if (head == NULL)
-            head = tail = r;
-        else
-        {
-            tail->next = r;
-            tail = r;
-        }
-    };
-    void RemoveNode(node& head, node& tail, string id) {
-        node* ps = new node();
-        ps = head;
-        while (ps->next != NULL ) {
-            if (ps.data) {
-                ps->next = ps->next->next;
-                break;
-            }
-            ps = ps->next;
-            it++;
-        }
-    }
-    };
-    void RemoveList();
-    node<T>* FindNode(T val);
-};
-*/
-
-//cac class
 
 class sach
 {
@@ -239,29 +180,127 @@ public:
 };
 class banDoc {
 private:
-    string ma, hoTen, ngayTG;
+    string ma, hoTen,sdt, diachi ,ngayTG;
 public:
     banDoc()
     {
         this->ma="";
         this->hoTen = "";
         this->ngayTG = "";
+        this->sdt = "";
+        this->diachi = "";
     }
     ~banDoc()
     {
         this->ma = "";
         this->hoTen = "";
         this->ngayTG = "";
+        this->sdt = "";
+        this->diachi = "";
     }
-    void setBD()
+    void them(banDoc &bd, int id)
     {
-
+        string maid = to_string(id);
+        bd.ma = maid;
+        cout << "Ho va ten: " << endl;
+        getline(cin, bd.hoTen);
+        getline(cin, bd.hoTen);
+        cout << "SDT: " << endl;
+        getline(cin, bd.sdt);
+        cout << "Dia chi : " << endl;
+        getline(cin, bd.diachi);
+        cout << "Ngay tham gia : " << endl;
+        getline(cin, bd.ngayTG);
     }
 
-    void getBD()
+    void xuattitle_bd()
     {
+        int w = 25;
+        cout << setw(90) << "Danh sach ban doc" << endl << endl;
+        cout << "*******************************************************************************************************************************************************" << endl;
+        cout << setw(w) << "Ma ban doc" << setw(w) << "Ho va ten" << setw(w) << "So dien thoai" << setw(w) << "Dia chi" << setw(w) << "Ngay tham gia"<< endl;
+    }
+    void xuat_bd()
+    {
+        int w = 25;
+            cout << setw(w) << this->ma;
+            cout << setw(w) << this->hoTen;
+            cout << setw(w) << this->sdt;
+            cout << setw(w) << this->diachi;
+            cout << setw(w) << this->ngayTG;
+            cout << endl;
+    }
+    void update_bd(banDoc arr[1000], int n)
+    {
+        ofstream file_s("../BD.txt");
+        for (int i = 0; i < n; i++) {
+            file_s << arr[i].ma << "," << arr[i].hoTen << "," << arr[i].sdt << "," << arr[i].diachi << "," << arr[i].ngayTG << endl;
+        }
+        file_s.close();
+    }
+    void getlist(banDoc arr[1000], int& sl)
+    {
+        fstream f;
+        int i = 0;
+        sl = 0;
+        f.open("../BD.txt", ios::in);
+        string line, sach_item;
+        int  item = 0;
+        while (!f.eof())
+        {
+            getline(f, line);
+            sach_item = line;
+            if (sach_item != "") {
+                for (int index = 0; index <= sach_item.size() - 1; index++) {
+                    if (sach_item[index] != ',') {
+                        if (item == 0) {
+                            arr[sl].ma.push_back(sach_item[index]);
+                        }
+                        else if (item == 1) {
+                            arr[sl].hoTen.push_back(sach_item[index]);
+                        }
+                        else if (item == 2) {
+                            arr[sl].sdt.push_back(sach_item[index]);
+                        }
+                        else if (item == 3) {
+                            arr[sl].diachi.push_back(sach_item[index]);
+                        }
+                        else if (item == 4) {
+                            arr[sl].ngayTG.push_back(sach_item[index]);
+                        }
+                    }
+                    else
+                    {
+                        item++;
+                    }
+
+                }
+                item = 0;
+                sl++;
+            }
+
+        }
+
+        f.close();
 
     }
+    void xoa(banDoc arr[1000], int& n)
+    {
+        string id_xoa;
+        cout << "Nhap id sach can xoa" << endl;
+        cin >> id_xoa;
+        bool flag = false;
+        for (int index = 0; index < n; index++) {
+            if (arr[index].ma == id_xoa) {
+                arr[index].ma = "null";
+                flag = true;
+            }
+        }
+        if (!flag) {
+            cout << "Ma sach khong ton tai";
+        }
+    }
+
 };
 
 class phieuMuon {
@@ -271,12 +310,13 @@ private:
 public:
     phieuMuon()
     {
-        this->soPhieu = "123";
-        this->maBD = "321";
-        this->maSach = "112";
-        this->ngayMuon = "26/03/20";
-        this->ngayTra = ngayMuon;
-        this->tinhTrang = "0";
+        this->soPhieu = "";
+        this->maBD = "";
+        this->maSach = "";
+        this->ngayMuon = "";
+        this->ngayTra;
+        this->ngayTra = "";
+        this->tinhTrang = "";
 
     }
     ~phieuMuon()
@@ -290,14 +330,14 @@ public:
     }
     void title_phieumuon()
     {
-        int w = 22;
+        int w = 25;
         cout << setw(77) << "Danh sach phieu muon" << endl << endl;
         cout << "***********************************************************************************************************************************" << endl;
         cout << setw(w) << "So phieu" << setw(w) << "Ma ban doc" << setw(w) << "Ma sach" << setw(w) << "Ngay muon" << setw(w) << "Ngay tra" << setw(w) << "Tinh trang" << endl;
     }
     void xuat()
     {
-        int w = 22;
+        int w = 25;
         if (this->soPhieu != "null") {
             cout << setw(w) << this->soPhieu;
             cout << setw(w) << this->maBD;
@@ -309,11 +349,59 @@ public:
             cout << endl;
         }
     }
-
-    void getBD()
+    void getlist_pm(phieuMuon arr[1000], int& sl)
     {
+        fstream f;
+        int i = 0;
+        sl = 0;
+        f.open("../PhieuMuon.txt", ios::in);
+        string line, sach_item;
+        int  item = 0;
+        while (!f.eof())
+        {
+            getline(f, line);
+            sach_item = line;
+            if (sach_item != "") {
+                for (int index = 0; index <= sach_item.size() - 1; index++) {
+                    if (sach_item[index] != ',') {
+                        if (item == 0) {
+                            arr[sl].soPhieu.push_back(sach_item[index]);
+                        }
+                        else if (item == 1) {
+                            arr[sl].maBD.push_back(sach_item[index]);
+                        }
+                        else if (item == 2) {
+                            arr[sl].maSach.push_back(sach_item[index]);
+                        }
+                        else if (item == 3) {
+                            arr[sl].ngayMuon.push_back(sach_item[index]);
+                        }
+                        else if (item == 4) {
+                            arr[sl].ngayTra.push_back(sach_item[index]);
+                        }
+                        else if (item == 5) {
+                            arr[sl].tinhTrang.push_back(sach_item[index]);
+                        }
+                        
+                    }
+                    else
+                    {
+                        item++;
+                    }
+
+                }
+                item = 0;
+                sl++;
+            }
+
+        }
+
+        f.close();
 
     }
+
+    
+    
 };
 string inputPassword(size_t length_max)
 {
@@ -397,14 +485,19 @@ tryagain:
 }
 void menu()
 {
-    int tab,tab_sach,tab_phieu,n=0;
-    sach list[1000],s, iteminput;
-    phieuMuon l;
+    int tab,tab_sach,tab_phieu,tab_bd,n_s=0,n_pm=0,n_bd=0;
+    sach list_s[1000],s, iteminput;
+    phieuMuon l,pm, list_pm[1000], pm_input;
+    banDoc list_bd[1000],bandoc_input,bd ;
     //system("cls");
-    s.getlist(list, n);
+    s.getlist(list_s, n_s);
+    l.getlist_pm(list_pm, n_pm);
+    bd.getlist(list_bd, n_bd);
 menu:
     cout << "1. Quan ly sach"<<endl;
     cout << "2. Quan ly phieu muon"<<endl;
+    cout << "3. Quan ly ban doc" << endl;
+
     cout << "Chon tac vu: "<<endl;
     cin >> tab;
     if (tab == 1)
@@ -418,28 +511,24 @@ menu:
            //xem danh sach sach
             s.xuattitle();
             
-            for (int i = 0; i < n; i++) {
-                list[i].xuat();
+            for (int i = 0; i < n_s; i++) {
+                list_s[i].xuat();
             }
-
-
-
             goto menu;
-
         }
         else if (tab_sach == 2) {
             //them sach
             iteminput.them(iteminput);
-            list[n] = iteminput;
-            n++;
-            iteminput.update_sach(list, n);
+            list_s[n_s] = iteminput;
+            n_pm++;
+            iteminput.update_sach(list_s, n_s);
 
             goto menu;
         }
         else if (tab_sach == 3) {
             //Xoa sach
-            s.xoa(list, n);
-            iteminput.update_sach(list, n);
+            s.xoa(list_s, n_s);
+            iteminput.update_sach(list_s, n_s);
             goto menu;
         }
     }
@@ -454,8 +543,8 @@ menu:
             //xem danh sach sach
             l.title_phieumuon();
 
-            for (int i = 0; i < n; i++) {
-                l.xuat();
+            for (int i = 0; i < n_pm; i++) {
+                list_pm[i].xuat();
             }
 
 
@@ -465,21 +554,52 @@ menu:
         }
         else if (tab_sach == 2) {
             //them sach
-            iteminput.them(iteminput);
-            list[n] = iteminput;
-            n++;
-            iteminput.update_sach(list, n);
+            
 
             goto menu;
         }
         else if (tab_sach == 3) {
             //Xoa sach
-            s.xoa(list, n);
-            iteminput.update_sach(list, n);
+            
             goto menu;
         }
 
         goto menu;
+    }
+    else if (tab == 3) {
+        cout << "1. Xem danh sach ban doc" << endl;
+        cout << "2. Them ban doc" << endl;
+        cout << "3.Xoa ban doc" << endl;
+        cout << "Chon tac vu: " << endl;
+        cin >> tab_bd;
+        if (tab_bd == 1) {
+            //xem danh sach ban doc
+            bd.xuattitle_bd();
+
+            for (int i = 0; i < n_bd; i++) {
+                list_bd[i].xuat_bd();
+            }
+
+            goto menu;
+        }
+        else if (tab_bd == 2) {
+            //them ban doc
+            bd.them(bandoc_input,n_bd+1);
+            list_bd[n_bd] = bandoc_input;
+            n_bd++;
+            bd.update_bd(list_bd, n_bd);
+
+            goto menu;
+        }
+        else if (tab_bd == 3) {
+            //Xoa ban doc
+            bd.xoa(list_bd, n_bd);
+            bd.update_bd(list_bd, n_bd);
+
+            goto menu;
+        }
+        goto menu;
+
     }
 
 }
@@ -491,8 +611,19 @@ int main()
     sach s;
     if (dangNhap()){
         menu();
-        
+        time_t rawtime;
+        struct tm* timeinfo;
+        char buffer[80];
+
+        time(&rawtime);
+        timeinfo = localtime(&rawtime);
+
+        strftime(buffer, 80, "%d-%m-%Y %I:%M:%S", timeinfo);
+        std::string str(buffer);
+
+        std::cout << str;
     }
+    
 
 
 }
