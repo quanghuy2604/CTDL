@@ -94,13 +94,13 @@ public:
         cin >> id_xoa;
         bool flag=false;
         for (int index = 0; index <n ; index++) {
-            if (arr[index].maSach == id_xoa) {
+            if (arr[index].maSach == id_xoa && arr[index].tinhTrang=="0") {
                 arr[index].maSach = "null";
                 flag = true;
             }
         }
         if (!flag) {
-            cout << setw(20) << "Ma sach khong ton tai";
+            cout << setw(20) << "Ma sach khong ton tai hoac sach dang duoc muon.";
         }
     }
 
@@ -599,6 +599,7 @@ menu:
             for (int i = 0; i < n_s; i++) {
                 list_s[i].xuat();
             }
+            _getch();
             goto lb_sach;
         }
         else if (tab_sach == 2) {
@@ -608,13 +609,14 @@ menu:
             n_s++;
             
             iteminput.update_sach(list_s, n_s);
-
+            _getch();
             goto lb_sach;
         }
         else if (tab_sach == 3) {
             //Xoa sach
             s.xoa(list_s, n_s);
             iteminput.update_sach(list_s, n_s);
+            _getch();
             goto lb_sach;
         }
         else if (tab_sach==0) {
@@ -644,6 +646,7 @@ menu:
             }
 
             cout << endl;
+            _getch();
             goto lb_pm;
 
         }
@@ -702,6 +705,7 @@ menu:
             }
             l.update_pm(list_pm, n_pm);
             cout << endl;
+            _getch();
             goto lb_pm;
         }
         else if (tab_phieu==0) {
@@ -727,7 +731,7 @@ menu:
             for (int i = 0; i < n_bd; i++) {
                 list_bd[i].xuat_bd();
             }
-
+            _getch();
             goto lb_bd;
         }
         else if (tab_bd == 2) {
