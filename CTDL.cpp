@@ -68,7 +68,7 @@ public:
 
        
     }
-    void update_sach(sach arr[1000],int n)
+    void update_sach(sach arr[1000],int &n)
     {
         bool flag = true;
         ofstream file_s("../Sach.txt");
@@ -79,13 +79,15 @@ public:
             if (arr[i].maSach == arr[n - 1].maSach)
                 flag = false;
         }
-        file_s.close();
+        
         if (flag) {
             file_s << arr[n-1].maSach << "," << arr[n - 1].tenSach << "," << arr[n - 1].tacGia << "," << arr[n - 1].giaBan << "," << arr[n - 1].NXB << "," << arr[n - 1].tinhTrang << "," << arr[n - 1].namPH << "," << arr[n - 1].soTrang << "," << arr[n - 1].ngayNK << endl;
         }
         else {
+            n--;
             cout << setw(20) << "Ma sach bi trung, khong them sach vao dc ." << endl;
         }
+        file_s.close();
     }
     void xoa(sach arr[1000], int &n)
     {
@@ -540,6 +542,9 @@ tryagain:
 
         if (datalogin==login) {
             system("cls");
+            HANDLE hConsoleColor;
+            hConsoleColor = GetStdHandle(STD_OUTPUT_HANDLE);
+            SetConsoleTextAttribute(hConsoleColor, 12);
             cout << setw(20) << "Ban da dang nhap thanh cong, enter de tiep tuc." << endl;
             _getch();
             f.close();
@@ -568,9 +573,14 @@ void menu()
     bd.getlist(list_bd, n_bd);
 menu:
     system("cls");
+    HANDLE hConsoleColor;
+    hConsoleColor = GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleTextAttribute(hConsoleColor, 12);
     cout<<setw(20) << "MENU" << endl;
     cout << "*************************************" << endl;
 
+    hConsoleColor = GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleTextAttribute(hConsoleColor, 14);
     cout<<"1. Quan ly sach"<<endl;
     cout<<"2. Quan ly phieu muon"<<endl;
     cout<<"3. Quan ly ban doc" << endl;
@@ -583,8 +593,14 @@ menu:
     {
     lb_sach:
         system("cls");
+        HANDLE hConsoleColor;
+        hConsoleColor = GetStdHandle(STD_OUTPUT_HANDLE);
+        SetConsoleTextAttribute(hConsoleColor, 12);
         cout << setw(20) << "SACH" << endl;
         cout << "*************************************" << endl;
+
+        hConsoleColor = GetStdHandle(STD_OUTPUT_HANDLE);
+        SetConsoleTextAttribute(hConsoleColor, 14);
         cout << "1. Xem danh sach Sach" << endl;
         cout  << "2.Them sach moi" << endl;
         cout  << "3.Xoa sach" << endl;
@@ -629,8 +645,12 @@ menu:
     {
     lb_pm:
         system("cls");
+        hConsoleColor = GetStdHandle(STD_OUTPUT_HANDLE);
+        SetConsoleTextAttribute(hConsoleColor, 12);
         cout << setw(20) << "MUON/ TRA SACH" << endl;
         cout << "*************************************" << endl;
+        hConsoleColor = GetStdHandle(STD_OUTPUT_HANDLE);
+        SetConsoleTextAttribute(hConsoleColor, 14);
         cout << "1. Xem danh sach phieu muon" << endl;
         cout << "2.Muon sach" << endl;
         cout <<  "3.Tra sach" << endl;
@@ -654,6 +674,8 @@ menu:
             //Muon sach
             string id_bd, id_sach;
             int err;
+            hConsoleColor = GetStdHandle(STD_OUTPUT_HANDLE);
+            SetConsoleTextAttribute(hConsoleColor, 12);
             cout <<endl << setw(20) << "Nhap ma ban doc : ";
             cin >> id_bd;
             cout << endl << setw(20) << "Nhap ma sach muon :";
@@ -687,6 +709,8 @@ menu:
             //Tra sach
             string sp;
             string err;
+            hConsoleColor = GetStdHandle(STD_OUTPUT_HANDLE);
+            SetConsoleTextAttribute(hConsoleColor, 12);
             cout << "Nhap so phieu muon tra: ";
             cin >> sp;
             //tra ve id sach
@@ -717,8 +741,12 @@ menu:
     else if (tab == 3) {
     lb_bd:
         system("cls");
+        hConsoleColor = GetStdHandle(STD_OUTPUT_HANDLE);
+        SetConsoleTextAttribute(hConsoleColor, 12);
         cout << setw(20) << "BAN DOC" << endl;
         cout << "*************************************" << endl;
+        hConsoleColor = GetStdHandle(STD_OUTPUT_HANDLE);
+        SetConsoleTextAttribute(hConsoleColor, 14);
         cout << "1. Xem danh sach ban doc" << endl;
         cout << "2. Them ban doc" << endl;
         cout << "0.Tro lai menu" << endl;
