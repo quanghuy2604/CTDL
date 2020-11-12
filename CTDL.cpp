@@ -70,17 +70,27 @@ public:
     }
     void update_sach(sach arr[1000],int n)
     {
+        bool flag = true;
         ofstream file_s("../Sach.txt");
-        for (int i = 0; i < n; i++) {
-            if (arr[i].maSach!="null")
+        for (int i = 0; i < n-1; i++) {
+            if (arr[i].maSach!="null" )
             file_s << arr[i].maSach << "," << arr[i].tenSach << "," << arr[i].tacGia << "," << arr[i].giaBan << "," << arr[i].NXB << "," << arr[i].tinhTrang << "," << arr[i].namPH << "," << arr[i].soTrang << "," << arr[i].ngayNK << endl;
+
+            if (arr[i].maSach == arr[n - 1].maSach)
+                flag = false;
         }
         file_s.close();
+        if (flag) {
+            file_s << arr[n-1].maSach << "," << arr[n - 1].tenSach << "," << arr[n - 1].tacGia << "," << arr[n - 1].giaBan << "," << arr[n - 1].NXB << "," << arr[n - 1].tinhTrang << "," << arr[n - 1].namPH << "," << arr[n - 1].soTrang << "," << arr[n - 1].ngayNK << endl;
+        }
+        else {
+            cout << setw(20) << "Ma sach bi trung, khong them sach vao dc ." << endl;
+        }
     }
     void xoa(sach arr[1000], int &n)
     {
         string id_xoa;
-        cout << "Nhap id sach can xoa"<<endl;
+        cout << setw(20) << "Nhap id sach can xoa"<<endl;
         cin >> id_xoa;
         bool flag=false;
         for (int index = 0; index <n ; index++) {
@@ -90,13 +100,10 @@ public:
             }
         }
         if (!flag) {
-            cout << "Ma sach khong ton tai";
+            cout << setw(20) << "Ma sach khong ton tai";
         }
     }
-    void sua()
-    {
 
-    }
     void xuattitle()
     {
         int w = 15;
@@ -518,12 +525,12 @@ tryagain:
     HANDLE hConsoleColor;
     hConsoleColor = GetStdHandle(STD_OUTPUT_HANDLE);
     SetConsoleTextAttribute(hConsoleColor, 14);
-    cout << "************************************"<<endl;
-    cout << "*        DANG NHAP HE THONG        *" << endl;
-    cout << "************************************" << endl;
-    cout << "====================================="<<endl;
-    cout << setw(10) << "User : "; cin >> username;
-    cout << setw(10) << "Password :"; pass=inputPassword(20);
+    cout << setw(30) << "************************************"<<endl;
+    cout << setw(30) << "*        DANG NHAP HE THONG        *" << endl;
+    cout << setw(30) << "************************************" << endl;
+    cout << setw(30) << "====================================="<<endl;
+    cout << setw(20) << "User : "; cin >> username;
+    cout << setw(20) << "Password :"; pass=inputPassword(20);
     login = username +","+ pass;
     
     while (!f.eof())
@@ -533,7 +540,8 @@ tryagain:
 
         if (datalogin==login) {
             system("cls");
-            cout << "Dang nhap thanh cong" << endl;
+            cout << setw(20) << "Ban da dang nhap thanh cong, enter de tiep tuc." << endl;
+            _getch();
             f.close();
             return true;
         }
@@ -543,7 +551,7 @@ tryagain:
     }
     system("cls");
     sl++;
-    cout << "Sai ten dang nhap hoac mat khau , bạn còn "<<3-sl<< " lan nhap sai." << endl;
+    cout << setw(20) << "Sai ten dang nhap hoac mat khau , ban con "<<3-sl<< " lan nhap sai." << endl;
     goto tryagain;
     
 
@@ -559,18 +567,30 @@ void menu()
     l.getlist_pm(list_pm, n_pm);
     bd.getlist(list_bd, n_bd);
 menu:
-    cout << "1. Quan ly sach"<<endl;
-    cout << "2. Quan ly phieu muon"<<endl;
-    cout << "3. Quan ly ban doc" << endl;
+    system("cls");
+    cout<<setw(20) << "MENU" << endl;
+    cout << "*************************************" << endl;
 
-    cout << "Chon tac vu: "<<endl;
+    cout<<"1. Quan ly sach"<<endl;
+    cout<<"2. Quan ly phieu muon"<<endl;
+    cout<<"3. Quan ly ban doc" << endl;
+    cout << "0. Thoat chuong trinh" << endl;
+
+    cout<<setw(20) << "Chon tac vu: ";
     cin >> tab;
+
     if (tab == 1)
     {
+    lb_sach:
+        system("cls");
+        cout << setw(20) << "SACH" << endl;
+        cout << "*************************************" << endl;
         cout << "1. Xem danh sach Sach" << endl;
-        cout << "2.Them sach moi" << endl;
-        cout << "3.Xoa sach" << endl;
-        cout << "Chon tac vu: " << endl;
+        cout  << "2.Them sach moi" << endl;
+        cout  << "3.Xoa sach" << endl;
+        cout << "0.Tro lai menu" << endl;
+
+        cout << setw(20) << "Chon tac vu: ";
         cin >> tab_sach;
         if (tab_sach == 1) {
            //xem danh sach sach
@@ -579,32 +599,43 @@ menu:
             for (int i = 0; i < n_s; i++) {
                 list_s[i].xuat();
             }
-            goto menu;
+            goto lb_sach;
         }
         else if (tab_sach == 2) {
             //them sach
             iteminput.them(iteminput);
             list_s[n_s] = iteminput;
-            n_pm++;
+            n_s++;
+            
             iteminput.update_sach(list_s, n_s);
 
-            goto menu;
+            goto lb_sach;
         }
         else if (tab_sach == 3) {
             //Xoa sach
             s.xoa(list_s, n_s);
             iteminput.update_sach(list_s, n_s);
+            goto lb_sach;
+        }
+        else if (tab_sach==0) {
             goto menu;
         }
+        cout << endl;
+        goto lb_sach;
     }
     else if (tab==2)
     {
+    lb_pm:
+        system("cls");
+        cout << setw(20) << "MUON/ TRA SACH" << endl;
+        cout << "*************************************" << endl;
         cout << "1. Xem danh sach phieu muon" << endl;
         cout << "2.Muon sach" << endl;
-        cout << "3.Tra sach" << endl;
-        cout << "Chon tac vu: " << endl;
-        cin >> tab_sach;
-        if (tab_sach == 1) {
+        cout <<  "3.Tra sach" << endl;
+        cout <<"0.Tro lai menu" << endl;
+        cout << setw(20) << "Chon tac vu: ";
+        cin >> tab_phieu;
+        if (tab_phieu == 1) {
             //xem danh sach sach
             l.title_phieumuon();
 
@@ -613,23 +644,23 @@ menu:
             }
 
             cout << endl;
-            goto menu;
+            goto lb_pm;
 
         }
-        else if (tab_sach == 2) {
+        else if (tab_phieu == 2) {
             //Muon sach
             string id_bd, id_sach;
             int err;
-            cout <<endl<< "Nhap ma ban doc : ";
+            cout <<endl << setw(20) << "Nhap ma ban doc : ";
             cin >> id_bd;
-            cout << endl << "Nhap ma sach muon :";
+            cout << endl << setw(20) << "Nhap ma sach muon :";
             cin >> id_sach;
             err=s.TimSach(list_s, n_s, id_sach);
             if (err == 0) {
-                cout << endl << "Khong tim thay sach muon muon.";
+                cout << endl << setw(20) << "Khong tim thay sach muon muon.";
             }
             else if (err == 1) {
-                cout << endl << "Sach da duoc muon.";
+                cout << endl << setw(20) << "Sach da duoc muon.";
             }
             else {
                 bool flag;
@@ -639,17 +670,17 @@ menu:
                     l.update_pm(list_pm, n_pm);
                     s.ttsach(list_s,n_s, id_sach,"1");
                     s.update_sach(list_s, n_s);
-                    cout << endl << "Muon sach thanh cong.";
+                    cout << endl << setw(20)<<"Muon sach thanh cong.";
                 }
                 else {
-                    cout << endl << "Khong tim thay ma ban doc.";
+                    cout << endl << setw(20) << "Khong tim thay ma ban doc.";
                 }
             }
             cout << endl;
 
-            goto menu;
+            goto lb_pm;
         }
-        else if (tab_sach == 3) {
+        else if (tab_phieu == 3) {
             //Tra sach
             string sp;
             string err;
@@ -658,28 +689,36 @@ menu:
             //tra ve id sach
             err=l.trasach(list_pm, n_pm, sp);
             if (err == "0") {
-                cout << endl << "Khong tim thay phieu muon.";
+                cout << endl << setw(20) << "Khong tim thay phieu muon.";
             }
             else if (err == "1") {
-                cout <<endl << "Phieu muon da dc tra.";
+                cout <<endl << setw(20) << "Phieu muon da dc tra.";
             }
             else{
-                cout << endl << "Tra sach thanh cong";
+                cout << endl << setw(20) << "Tra sach thanh cong";
                 s.ttsach(list_s, n_s,err, "0");
                 s.update_sach(list_s, n_s);
 
             }
             l.update_pm(list_pm, n_pm);
             cout << endl;
+            goto lb_pm;
+        }
+        else if (tab_phieu==0) {
             goto menu;
         }
-        cout << endl;
-        goto menu;
+        cout << setw(20) <<"Tac vu duoc chon khong ton tai" << endl;
+        goto lb_pm;
     }
     else if (tab == 3) {
+    lb_bd:
+        system("cls");
+        cout << setw(20) << "BAN DOC" << endl;
+        cout << "*************************************" << endl;
         cout << "1. Xem danh sach ban doc" << endl;
         cout << "2. Them ban doc" << endl;
-        cout << "Chon tac vu: " << endl;
+        cout << "0.Tro lai menu" << endl;
+        cout << setw(20) << "Chon tac vu: " ;
         cin >> tab_bd;
         if (tab_bd == 1) {
             //xem danh sach ban doc
@@ -689,20 +728,27 @@ menu:
                 list_bd[i].xuat_bd();
             }
 
-            goto menu;
+            goto lb_bd;
         }
         else if (tab_bd == 2) {
             //them ban doc
             bd.them(bandoc_input,n_bd+1);
             list_bd[n_bd] = bandoc_input;
             n_bd++;
+            
             bd.update_bd(list_bd, n_bd);
 
+            goto lb_bd;
+        }
+        else if (tab_bd==0){
             goto menu;
         }
        
-        goto menu;
+        goto lb_bd;
 
+    }
+    else {
+    exit(0);
     }
 
 }
@@ -714,9 +760,6 @@ int main()
     sach s;
     if (dangNhap()){
         menu();
-        
-        
-        
     }
     
 
